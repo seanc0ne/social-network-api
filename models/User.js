@@ -4,11 +4,29 @@ const moment = require('moment');
 const UserSchema = new Schema(
     {
       username: {
-        type: String
+        type: String,
+        unique: true,
+        required: 'You better fill this out!',
+        trim: true
       },
       email: {
-        type: String
+        type: String,
+        required: 'We need an email!',
+        unique: true,
+        match: [/.+@.+\..+/, 'Please enter a valid e-mail address']
       },
+      thoughts: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Thought'
+        }
+      ],
+      friends: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'User'
+        }
+      ]
     },
     // {
     //   toJSON: {
