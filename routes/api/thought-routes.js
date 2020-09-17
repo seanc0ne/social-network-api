@@ -11,7 +11,7 @@ const {
 router
     .route('/')
     .get(getAllThought)
-    .post(createThought);
+
 // Set up GET one, PUT, and DELETE at /api/thoughts/:id
 // /api/thoughts/:id
 router
@@ -19,4 +19,8 @@ router
     .get(getThoughtById)
     .put(updateThought)
     .delete(deleteThought);
+
+router.route('/:userId')
+    .post(createThought);
+
 module.exports = router;

@@ -1,4 +1,5 @@
 const { Thought, User } = require('../models');
+
 const thoughtController = {
     // get all thoughts
     getAllThought(req, res) {
@@ -19,12 +20,26 @@ getThoughtById({ params }, res) {
         res.sendStatus(400);
       });
   },
-    // createThought
-    createThought({ body }, res) {
-        Thought.create(body)
-            .then(dbThoughtData => res.json(dbThoughtData))
-            .catch(err => res.status(400).json(err));
-    },
+    // create thought and add it to a user - POST /api/thoughts/:userId
+  createThought({ params, body }, res) {
+    Thought.create(body)
+    .then(({ _id }) => {        // pass the _id of the newly created thought
+      return User.findOneAndUpdate(   // and update the array of thoughts of the associated user
+        { _id: params.userId },
+        { $push: { thoughts: _id } },
+        { new: true }   // b/c we want to return the updated user data
+      )
+      .select('-__v');
+    })
+    .then(dbUserData => {
+      if (!dbUserData) {
+        res.status(404).json({ message: 'No user found with this id' });
+        return;
+      }
+      res.json(dbUserData);
+    })
+    .catch(err => res.json(err));
+  },
     // update Thought by id
     updateThought({ params, body }, res) {
         Thought.findOneAndUpdate({ _id: params.id }, body, { new: true })
