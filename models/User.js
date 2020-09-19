@@ -28,13 +28,13 @@ const UserSchema = new Schema(
         }
       ]
     },
-    // {
-    //   toJSON: {
-    //     virtuals: true,
-    //     getters: true
-    //   },
-    //   id: false
-    // }
+    {
+      toJSON: {
+        virtuals: true,
+        getters: true
+      },
+      id: false
+    }
   );
 
   // create User model using UserSchema
